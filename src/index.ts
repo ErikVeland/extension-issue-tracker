@@ -12,15 +12,15 @@ function main(context: types.IExtensionContext) {
   context.registerReducer(['session', 'issues'], sessionReducer);
 
   context.registerDashlet('Issues', 1, 2, 200, Issues,
-    (state: types.IState) =>
-      util.getSafe(state, ['confidential', 'account', 'nexus', 'APIKey'], undefined) !== undefined,
-  () => ({}), { closable: true });
+                          (state: types.IState) =>
+                            util.getSafe(state, ['confidential', 'account', 'nexus', 'APIKey'], undefined) !== undefined,
+                          () => ({}), { closable: true });
 
   context.registerDialog('feedback-responder', FeedbackResponderDialog);
 
   context.once(() => {
     context.api.setStylesheet('issue-tracker',
-      path.join(__dirname, 'issue_tracker.scss'));
+                              path.join(__dirname, 'issue_tracker.scss'));
   });
 
   return true;

@@ -98,8 +98,8 @@ export function getLastDevComment(
             //  that include the "reported by [username]" pattern and have been created
             //  _after_ our last developer comment. We're only interested in the highest
             //  value in milliseconds.
-            newestCommentMS = createdAtMS;
-          }
+          newestCommentMS = createdAtMS;
+        }
         return newestCommentMS;
       }, 0);
 
@@ -145,8 +145,8 @@ export function requestFromApi(apiURL: string): Promise<any> {
         }
       });
     })
-    .on('error', (err: Error) => {
-      return reject(err);
-    });
+      .on('error', (err: Error) => {
+        return reject(err);
+      });
   });
 }

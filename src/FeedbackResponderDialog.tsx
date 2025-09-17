@@ -299,7 +299,7 @@ class FeedbackResponderDialog extends ComponentEx<IProps, IComponentState> {
     if ((feedbackMessage.length > 0)
       && (feedbackMessage.length < FeedbackResponderDialog.MIN_TEXT_LENGTH)) {
       return t('Please provide a response of at least {{minLength}} characters',
-        { replace: { minLength: FeedbackResponderDialog.MIN_TEXT_LENGTH } });
+               { replace: { minLength: FeedbackResponderDialog.MIN_TEXT_LENGTH } });
     }
 
     return undefined;
@@ -425,23 +425,23 @@ class FeedbackResponderDialog extends ComponentEx<IProps, IComponentState> {
     return this.context.api.selectFile({
       title: this.context.api.translate('Select file to attach'),
     })
-    .then((selectedPath) => fs.statAsync(selectedPath)
-      .then(stat => {
-        this.addFeedbackFile({
-          filename: path.basename(selectedPath),
-          filePath: selectedPath,
-          size: stat.size,
-          type: 'Custom attachment',
-        });
-      }))
-    .catch(err => {
-      if (err.code === 'ERR_INVALID_ARG_TYPE') {
+      .then((selectedPath) => fs.statAsync(selectedPath)
+        .then(stat => {
+          this.addFeedbackFile({
+            filename: path.basename(selectedPath),
+            filePath: selectedPath,
+            size: stat.size,
+            type: 'Custom attachment',
+          });
+        }))
+      .catch(err => {
+        if (err.code === 'ERR_INVALID_ARG_TYPE') {
         // User canceled or selected nothing.
-        return Promise.resolve();
-      }
-      this.context.api.showErrorNotification('Unable to attach file', err.message,
-        { allowReport: false });
-    });
+          return Promise.resolve();
+        }
+        this.context.api.showErrorNotification('Unable to attach file', err.message,
+                                               { allowReport: false });
+      });
   }
 
   private attachState(stateKey: string, name: string) {
@@ -519,7 +519,7 @@ class FeedbackResponderDialog extends ComponentEx<IProps, IComponentState> {
       prev + feedbackFiles[key].size, 0);
     if (size + file.size > FeedbackResponderDialog.MAX_ATTACHMENT_SIZE) {
       onShowError('Attachment too big',
-        'Sorry, the combined file size must not exceed 40MB', undefined, false);
+                  'Sorry, the combined file size must not exceed 40MB', undefined, false);
     } else {
       this.nextState.feedbackFiles[file.filename] = file;
     }
@@ -531,8 +531,8 @@ class FeedbackResponderDialog extends ComponentEx<IProps, IComponentState> {
 
   private doSubmitFeedback() {
     const { APIKey, OAuthCredentials, onOpen, onSetOustandingIssues,
-            onSetUpdateDetails, onShowError, onDismissNotification,
-            onShowActivity, outstandingIssues, issues } = this.props;
+      onSetUpdateDetails, onShowError, onDismissNotification,
+      onShowActivity, outstandingIssues, issues } = this.props;
 
     const { feedbackMessage, feedbackFiles, currentIssue } = this.state;
 
@@ -551,81 +551,81 @@ class FeedbackResponderDialog extends ComponentEx<IProps, IComponentState> {
     const loggedIn = (APIKey !== undefined) || (OAuthCredentials !== undefined);
 
     this.context.api.events.emit('submit-feedback',
-      title,
-      this.systemInfo() + '\n' + feedbackMessage,
-      undefined,
-      files,
-      !loggedIn,
-      (err: Error) => {
-        this.nextState.sending = false;
-        if (err !== null) {
-          if (err.name === 'ParameterInvalid') {
-            onShowError('Failed to send feedback', err.message, notificationId, false);
-          } else if ((err as any).body !== undefined) {
-            onShowError('Failed to send feedback', `${err.message} - ${(err as any).body}`,
-              notificationId, false);
-          } else {
-            onShowError('Failed to send feedback', err, notificationId, false);
-          }
-          this.clear();
-          onOpen(false);
-          return;
-        } else {
-          this.context.api.sendNotification({
-            type: 'success',
-            message: 'Feedback response sent successfully',
-            displayMS: 3000,
-          });
+                                 title,
+                                 this.systemInfo() + '\n' + feedbackMessage,
+                                 undefined,
+                                 files,
+                                 !loggedIn,
+                                 (err: Error) => {
+                                   this.nextState.sending = false;
+                                   if (err !== null) {
+                                     if (err.name === 'ParameterInvalid') {
+                                       onShowError('Failed to send feedback', err.message, notificationId, false);
+                                     } else if ((err as any).body !== undefined) {
+                                       onShowError('Failed to send feedback', `${err.message} - ${(err as any).body}`,
+                                                   notificationId, false);
+                                     } else {
+                                       onShowError('Failed to send feedback', err, notificationId, false);
+                                     }
+                                     this.clear();
+                                     onOpen(false);
+                                     return;
+                                   } else {
+                                     this.context.api.sendNotification({
+                                       type: 'success',
+                                       message: 'Feedback response sent successfully',
+                                       displayMS: 3000,
+                                     });
 
-          const outstanding = outstandingIssues.find(iss =>
-            iss.issue.number === currentIssue.number);
+                                     const outstanding = outstandingIssues.find(iss =>
+                                       iss.issue.number === currentIssue.number);
 
-          const commentDateMS: number = new Date(outstanding.lastDevComment.created_at).getTime();
-          const cacheEntries = Object.keys(issues)
-            .filter(key => issues[key].number === currentIssue.number)
-            .map(key => ({
-              key,
-              cacheEntry: {
-                ...issues[key],
-                lastCommentResponseMS: commentDateMS,
-              },
-            }));
+                                     const commentDateMS: number = new Date(outstanding.lastDevComment.created_at).getTime();
+                                     const cacheEntries = Object.keys(issues)
+                                       .filter(key => issues[key].number === currentIssue.number)
+                                       .map(key => ({
+                                         key,
+                                         cacheEntry: {
+                                           ...issues[key],
+                                           lastCommentResponseMS: commentDateMS,
+                                         },
+                                       }));
 
-          cacheEntries.forEach(entry => {
-            onSetUpdateDetails(entry.key, entry.cacheEntry);
-          });
-        }
+                                     cacheEntries.forEach(entry => {
+                                       onSetUpdateDetails(entry.key, entry.cacheEntry);
+                                     });
+                                   }
 
-        let removeFiles: string[];
-        if (feedbackFiles !== undefined) {
-          removeFiles = Object.keys(feedbackFiles)
-            .filter(fileId =>
-              ['State', 'Dump', 'LogCopy'].indexOf(feedbackFiles[fileId].type) !== -1)
-            .map(fileId => feedbackFiles[fileId].filePath);
-        }
+                                   let removeFiles: string[];
+                                   if (feedbackFiles !== undefined) {
+                                     removeFiles = Object.keys(feedbackFiles)
+                                       .filter(fileId =>
+                                         ['State', 'Dump', 'LogCopy'].indexOf(feedbackFiles[fileId].type) !== -1)
+                                       .map(fileId => feedbackFiles[fileId].filePath);
+                                   }
 
-        if (removeFiles !== undefined) {
-          Promise.each(removeFiles, removeFile => fs.removeAsync(removeFile))
-            .catch(innerErr => {
-              onShowError('An error occurred removing temporary feedback files',
-                innerErr, notificationId);
+                                   if (removeFiles !== undefined) {
+                                     Promise.each(removeFiles, removeFile => fs.removeAsync(removeFile))
+                                       .catch(innerErr => {
+                                         onShowError('An error occurred removing temporary feedback files',
+                                                     innerErr, notificationId);
 
-              return Promise.resolve();
-            });
-        }
+                                         return Promise.resolve();
+                                       });
+                                   }
 
-        const filteredOut = outstandingIssues.filter(iss =>
-          iss.issue.number !== currentIssue.number);
-        onDismissNotification(notificationId);
-        onSetOustandingIssues(filteredOut);
+                                   const filteredOut = outstandingIssues.filter(iss =>
+                                     iss.issue.number !== currentIssue.number);
+                                   onDismissNotification(notificationId);
+                                   onSetOustandingIssues(filteredOut);
 
-        if (filteredOut.length === 0) {
+                                   if (filteredOut.length === 0) {
           // Close if no issues remaining
-          onOpen(false);
-        }
+                                     onOpen(false);
+                                   }
 
-        this.clear();
-      });
+                                   this.clear();
+                                 });
   }
   private clear() {
     this.nextState.feedbackFiles = {};

@@ -163,12 +163,12 @@ class IssueList extends ComponentEx<IProps, IIssueListState> {
         replace: {
           completion: Math.floor(completion * 100),
           planned: issue.milestone.due_on === null ? '' :
-            t(', planned for {{date}}', {
-              replace: {
-                date: new Date(issue.milestone.due_on)
-                  .toLocaleDateString(this.context.api.locale()),
-              },
-            }),
+          t(', planned for {{date}}', {
+            replace: {
+              date: new Date(issue.milestone.due_on)
+                .toLocaleDateString(this.context.api.locale()),
+            },
+          }),
         },
       });
 
@@ -333,7 +333,7 @@ class IssueList extends ComponentEx<IProps, IIssueListState> {
 
   private updateIssues(force: boolean) {
     const { t, username, issues, onOpenFeedbackResponder, onSetUpdateDetails,
-            onSetOustandingIssues, onUpdateIssueList } = this.props;
+      onSetOustandingIssues, onUpdateIssueList } = this.props;
     if (Date.now() - this.mLastRefresh < IssueList.MIN_REFRESH_DELAY) {
       return;
     }
@@ -395,7 +395,7 @@ class IssueList extends ComponentEx<IProps, IIssueListState> {
                       }
 
                       return updateIssueDetails(issueId, cachedEntry);
-                  });
+                    });
               });
           }})
           .then(() => {
