@@ -7,7 +7,7 @@ import {
   ListGroupItem, MenuItem, Panel,
 } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
-import ReactMarkdown from 'react-markdown';
+const ReactMarkdown = require('react-markdown');
 import { connect } from 'react-redux';
 
 import {

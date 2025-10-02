@@ -12,7 +12,7 @@ import * as React from 'react';
 import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import * as ReactDOM from 'react-dom';
 import { withTranslation } from 'react-i18next';
-import ReactMarkdown from 'react-markdown';
+const ReactMarkdown = require('react-markdown');
 import { connect } from 'react-redux';
 
 import { actions, ComponentEx, Dashlet, log, Spinner, tooltip, types, util } from 'vortex-api';
